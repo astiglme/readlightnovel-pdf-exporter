@@ -27,6 +27,7 @@ public class Application {
 	private static final String NOVEL_SHORTNAME = "pmg2";
 	private static final int CHAPTER_START = 1;
 	private static final int CHAPTER_END = 499;
+	private static final int FONT_SIZE = 20;
 
 	private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
@@ -73,13 +74,14 @@ public class Application {
 	private static void printDocument(final String text, final int chapterNumber)
 			throws FileNotFoundException, DocumentException {
 
-		final int folderNumber = ((chapterNumber/100)+1)*100;
+		final int folderNumber = ((chapterNumber/100));
 
-		final String dirPath = String.format("./export/%s/%d/", NOVEL_SHORTNAME, folderNumber);
+		final String dirPath = String.format("./export/%s/%d00-%d99/", NOVEL_SHORTNAME, folderNumber, folderNumber);
 
 		final File directory = new File(dirPath);
 		if(!directory.exists()) {
-			directory.mkdirs();
+			final boolean mkdirs = directory.mkdirs();
+			logger.info("creating mew directory {} successful: {}", directory.getPath(), mkdirs);
 		}
 
 		final Document document = new Document();
@@ -87,7 +89,7 @@ public class Application {
 
 		document.open();
 
-		final Font font = FontFactory.getFont(FontFactory.HELVETICA, 20, BaseColor.BLACK);
+		final Font font = FontFactory.getFont(FontFactory.HELVETICA, FONT_SIZE, BaseColor.BLACK);
 		final Chapter chapter = new Chapter(new Paragraph(text, font), chapterNumber);
 		document.add(chapter);
 
